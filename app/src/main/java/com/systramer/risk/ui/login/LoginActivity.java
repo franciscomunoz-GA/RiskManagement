@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.systramer.risk.ListaCitasActivity;
 import com.systramer.risk.R;
 import com.systramer.risk.ui.login.LoginViewModel;
 import com.systramer.risk.ui.login.LoginViewModelFactory;
@@ -173,7 +175,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void ValidarSesion(String User, String Pass){
-        Toast.makeText(getApplicationContext(), "User: "+User+" Pass: "+Pass+" IMEI: "+IMEI, Toast.LENGTH_LONG).show();
         final JSONObject Parametros = new JSONObject();
         try {
             Parametros.put("Correo", User);
@@ -213,6 +214,8 @@ public class LoginActivity extends AppCompatActivity {
                                 String Telefono  = Informacion.getString("Telefono");
                                 Toast.makeText(getApplicationContext(), "Bienvenido "+Nombre, Toast.LENGTH_SHORT).show();
                                 snackbar.make(layout, "Bienvenido "+Nombre, Snackbar.LENGTH_LONG).show();
+                                startActivity(new Intent(LoginActivity.this, ListaCitasActivity.class));
+                                finish();
                                 break;
                         }
                     }
