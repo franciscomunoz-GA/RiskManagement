@@ -1,3 +1,5 @@
+# 2020-06-17 (V 1.3.0)
+    Se crea la plantilla del listview
 # 2020-06-17 (V 1.2.0)
     Se agrega un listview
 # 2020-06-17 (V 1.2.0)
