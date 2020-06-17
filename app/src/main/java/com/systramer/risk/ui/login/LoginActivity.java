@@ -3,6 +3,7 @@ package com.systramer.risk.ui.login;
 import android.Manifest;
 import android.app.Activity;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -29,17 +30,33 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.systramer.risk.R;
 import com.systramer.risk.ui.login.LoginViewModel;
 import com.systramer.risk.ui.login.LoginViewModelFactory;
 
-public class LoginActivity extends AppCompatActivity {
+import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
+public class LoginActivity extends AppCompatActivity {
+    private RequestQueue requestQueue;
     private LoginViewModel loginViewModel;
 
     public TelephonyManager manager;
     public String IMEI;
 
+    ConstraintLayout layout;
+    private Snackbar snackbar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +97,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
+                    String user = usernameEditText.getText().toString().trim();
+                    String pass = passwordEditText.getText().toString().trim();
+                    ValidarSesion(user, pass);
                 }
                 setResult(Activity.RESULT_OK);
 
@@ -127,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
-
+        layout = (ConstraintLayout) findViewById(R.id.container);
         //OBTENER IMEI
         manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -145,10 +165,81 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), IMEI, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), IMEI, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+
+    }
+    private void ValidarSesion(String User, String Pass){
+        Toast.makeText(getApplicationContext(), "User: "+User+" Pass: "+Pass+" IMEI: "+IMEI, Toast.LENGTH_LONG).show();
+        final JSONObject Parametros = new JSONObject();
+        try {
+            Parametros.put("Correo", User);
+            Parametros.put("Password", Pass);
+            Parametros.put("Imei", IMEI);
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        final String savedata = Parametros.toString();
+        String URL = "http://cuenta-cuentas.com/backend/public/api/Sesion/UsuarioAplicacion";
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    String Mensaje = obj.getString("Message");
+                    if(Mensaje.equals("Consulta Exitosa")){
+                        String Data = obj.getString("Data");
+                        //for (int i = 0; i < Data.length(); i++){
+                        //JSONObject Fila = Data.getJSONObject(i);
+                        switch (Data){
+                            case "Usuario incorrecto":
+                                snackbar.make(layout, "Usuario y/o contraseña incorrecto(s)", Snackbar.LENGTH_LONG).show();
+                                break;
+                            case "Contraseña incorrecta":
+                                snackbar.make(layout, "Usuario y/o contraseña incorrecto(s)", Snackbar.LENGTH_LONG).show();
+                                break;
+                            case "IMEI incorrecto":
+                                snackbar.make(layout, "IMEI incorrecto", Snackbar.LENGTH_LONG).show();
+                                break;
+                            default:
+                                JSONObject Informacion = new JSONObject(Data);
+                                int Id        = Informacion.getInt("Id");
+                                String Nombre = Informacion.getString("Nombre");
+                                String Telefono  = Informacion.getString("Telefono");
+                                Toast.makeText(getApplicationContext(), "Bienvenido "+Nombre, Toast.LENGTH_SHORT).show();
+                                snackbar.make(layout, "Bienvenido "+Nombre, Snackbar.LENGTH_LONG).show();
+                                break;
+                        }
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            public String getBodyContentType(){ return "application/json; charset=utf-8";}
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return savedata == null ? null: savedata.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }
