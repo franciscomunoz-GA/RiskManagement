@@ -9,15 +9,14 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_weight="20"
-        android:background="#B11111"
         android:padding="10dp"
-        tools:srcCompat="@drawable/baseline_format_list_bulleted_white_18dp" />
+        tools:srcCompat="@drawable/baseline_format_list_bulleted_black_18dp" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_weight="80"
         android:orientation="vertical">
 
@@ -28,31 +27,50 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/Titulo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="80"
+                android:layout_weight="70"
                 android:gravity="center|left"
                 android:text="TextView"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/Fecha"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:gravity="center|left"
-                android:textStyle="italic"
-                android:text="TextView" />
+                android:layout_weight="30"
+                android:gravity="center|right"
+                android:text="TextView"
+                android:textColor="#424242"
+                android:textStyle="italic" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView5"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="50"
-            android:gravity="center|left"
-            android:textStyle="normal"
-            android:text="TextView" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Descripcion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="70"
+                android:gravity="center|left"
+                android:text="TextView"
+                android:textColor="#424242"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/Hora"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="30"
+                android:gravity="center|right"
+                android:text="TextView"
+                android:textColor="#424242"
+                android:textStyle="italic"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
