@@ -3,10 +3,13 @@ package com.systramer.risk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ListaCitasActivity extends AppCompatActivity {
+    ProgressBar progressBar;
     ListView ListViewCita;
     List<Cita> list;
     String IdUsuario;
@@ -47,10 +51,12 @@ public class ListaCitasActivity extends AppCompatActivity {
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         ListViewCita = findViewById(R.id.ListaCitas);
+        progressBar = findViewById(R.id.progressBar);
         TraerInformacion();
 
     }
     private void TraerInformacion(){
+        progressBar.setVisibility(View.VISIBLE);
         final JSONObject Parametros = new JSONObject();
         try {
             Parametros.put("Id", IdUsuario);
@@ -66,6 +72,7 @@ public class ListaCitasActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
+                    progressBar.setVisibility(View.INVISIBLE);
                     JSONObject obj = new JSONObject(response);
                     String Mensaje = obj.getString("Message");
                     if(Mensaje.equals("Consulta Exitosa")){
@@ -74,28 +81,46 @@ public class ListaCitasActivity extends AppCompatActivity {
                         list = new ArrayList<>();
                         for (int i = 0; i < Informacion.length(); i++){
                             JSONObject object = Informacion.getJSONObject(i);
-                            String Id          = object.getString("Id");
-                            String Tipo        = object.getString("Tipo");
+                            int Id             = object.getInt("Id");
+                            int Tipo           = object.getInt("Tipo");
                             String Descripcion = object.getString("Descripcion");
                             String Fecha       = object.getString("Fecha");
                             String Hora        = object.getString("Hora");
                             String Titulo      = object.getString("Titulo");
                             String NombreTipo;
-                            if(Tipo == "1"){
+                            int Imagen;
+                            if(Tipo == 1){
                                 NombreTipo = "Sitio de interés";
+                                Imagen = R.drawable.baseline_business_black_18dp;
                             }
                             else{
                                 NombreTipo = "Cliente";
+                                Imagen = R.drawable.baseline_face_black_18dp;
                             }
-                            list.add(new Cita(Integer.parseInt(Id), R.drawable.baseline_format_list_bulleted_black_18dp,Integer.parseInt(Tipo),NombreTipo,Descripcion, Fecha, Hora, Titulo));
+
+                            list.add(new Cita(Id, Imagen,Tipo,NombreTipo,Descripcion, Fecha, Hora, Titulo));
                             Custom_Adapter  adapter = new Custom_Adapter(getApplicationContext(),list);
                             ListViewCita.setAdapter(adapter);
 
                             ListViewCita.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Cita c = list.get(position);
-                                    Toast.makeText(getBaseContext(), c.Titulo, Toast.LENGTH_SHORT).show();
+                                    Cita cita = list.get(position);
+                                    if(cita.Tipo == 1){
+                                        Intent intent = new Intent(ListaCitasActivity.this, EncuestaSitioInteres.class);
+                                        intent.putExtra("IdUsuario", IdUsuario);
+                                        intent.putExtra("IdCita", cita.Id);
+                                        intent.putExtra("Tipo", cita.Tipo);
+                                        startActivity(intent);
+                                    }
+                                    else{
+                                        //Activity para Clientes
+                                        Intent intent = new Intent(ListaCitasActivity.this, EncuestaSitioInteres.class);
+                                        intent.putExtra("IdUsuario", IdUsuario);
+                                        intent.putExtra("IdCita", cita.Id);
+                                        intent.putExtra("Tipo", cita.Tipo);
+                                        startActivity(intent);
+                                    }
                                 }
                             });
                         }
@@ -104,7 +129,7 @@ public class ListaCitasActivity extends AppCompatActivity {
                 catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-                    //TraerInformacion();
+                    TraerInformacion();
                 }
             }
         }, new Response.ErrorListener() {
