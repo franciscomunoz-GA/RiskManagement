@@ -3,34 +3,55 @@ package com.systramer.risk;
 public class Cita {
     public int Id;
     public int Imagen;
-    public String Titulo;
+    public int Tipo;
+    public String NombreTipo;
     public String Descripcion;
     public String Fecha;
     public String Hora;
+    public String Titulo;
 
-    public Cita(int id, int imagen, String titulo, String descripcion, String fecha, String hora) {
+    public Cita(int id, int imagen, int tipo, String nombreTipo, String descripcion, String fecha, String hora, String titulo) {
         Id = id;
         Imagen = imagen;
-        Titulo = titulo;
+        Tipo = tipo;
+        NombreTipo = nombreTipo;
         Descripcion = descripcion;
         Fecha = fecha;
         Hora = hora;
+        Titulo = titulo;
     }
+
 
     public int getId() {
         return Id;
     }
 
     public void setId(int id) {
-        this.Id = id;
+        Id = id;
     }
 
-    public String getTitulo() {
-        return Titulo;
+    public int getImagen() {
+        return Imagen;
     }
 
-    public void setTitulo(String titulo) {
-        Titulo = titulo;
+    public void setImagen(int imagen) {
+        Imagen = imagen;
+    }
+
+    public int getTipo() {
+        return Tipo;
+    }
+
+    public void setTipo(int tipo) {
+        Tipo = tipo;
+    }
+
+    public String getNombreTipo() {
+        return NombreTipo;
+    }
+
+    public void setNombreTipo(String nombreTipo) {
+        NombreTipo = nombreTipo;
     }
 
     public String getDescripcion() {
@@ -49,19 +70,19 @@ public class Cita {
         Fecha = fecha;
     }
 
-    public int getImagen() {
-        return Imagen;
-    }
-
-    public void setImagen(int imagen) {
-        Imagen = imagen;
-    }
-
     public String getHora() {
         return Hora;
     }
 
     public void setHora(String hora) {
         Hora = hora;
+    }
+
+    public String getTitulo() {
+        return Titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        Titulo = titulo;
     }
 }

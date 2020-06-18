@@ -1,3 +1,5 @@
+# 2020-06-17 (V 1.3.2)
+    Se muestra el listiew con información tomada de la API
 # 2020-06-17 (V 1.3.1)
     Se crea listview con información de prueba
 # 2020-06-17 (V 1.3.0)
