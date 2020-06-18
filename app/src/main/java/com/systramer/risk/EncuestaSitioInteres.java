@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -34,10 +35,12 @@ public class EncuestaSitioInteres extends AppCompatActivity {
     String IdCita;
     String Tipo;
     ConexionSQLiteHelper conexionSQLiteHelper;
-    ListView ListViewCita;
+    ListView ListViewRiesgos;
     List<SitioInteresRiesgos> list;
+
     private RequestQueue requestQueue;
     ProgressBar progressBar;
+    SitioInteresAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +50,8 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         IdCita    = intent.getStringExtra("IdCita");
         IdUsuario = intent.getStringExtra("IdUsuario");
         Tipo      = intent.getStringExtra("Tipo");
-        progressBar = findViewById(R.id.progressBar);
-        ListViewCita = findViewById(R.id.ListaCitas);
-
+        progressBar = findViewById(R.id.progressBarRiesgos);
+        ListViewRiesgos = findViewById(R.id.ListaRiesgos);
         conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 1);
 
         TraerInformacion();
@@ -89,13 +91,11 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                                 JSONObject riesgo = ListaRiesgos.getJSONObject(j);
                                 riesgo.put("IdSitioInteres", IdEncuesta);
                                 //Creamos el riesgo en SQLite
-                                String IdRiesgo = InsertarRegistro(Utilidades.TablaSitioInteresRiesgos, riesgo);
-
-                                Toast.makeText(getApplicationContext(), "IdRiesgo: "+ IdRiesgo, Toast.LENGTH_SHORT).show();
+                                String R = InsertarRegistro(Utilidades.TablaSitioInteresRiesgos, riesgo);
+                                Toast.makeText(getApplicationContext(), "Riesgo: "+ R, Toast.LENGTH_SHORT).show();
                             }
-
+                            MostrarLista(IdEncuesta);
                         }
-                        MostrarLista();
                     }
                 }
                 catch (JSONException e) {
@@ -164,25 +164,23 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                     int IdSitioInteres  = Parametros.getInt("IdSitioInteres");
                     String Nombre  = Parametros.getString("Riesgo");
 
-
-                    Toast.makeText(getBaseContext(), "IdEncuesta: "+IdRiesgo + "IdSitioInteres: "+IdSitioInteres+" Titulo: "+Nombre, Toast.LENGTH_LONG).show();
-
                     String[] parameters = { String.valueOf(IdRiesgo) };
                     String[] campos = { Utilidades.IdSitioInteresRiesgo };
 
                     Cursor cursor = select.query(Utilidades.TablaSitioInteresRiesgos,campos, Utilidades.IdSitioInteresRiesgo+"=?", parameters, null, null, null);
                     cursor.moveToFirst();
                     try {
-                        return cursor.getString(0);
+                        return "encontrado "+cursor.getString(0);
                     }
                     catch (Exception e){
                         values.put(Utilidades.IdSitioInteresRiesgo, IdRiesgo);
                         values.put(Utilidades.FKIdSitioInteres, IdSitioInteres);
                         values.put(Utilidades.NombreSitioInteresRiesgo, Nombre);
-
+                        values.put(Utilidades.SitioInteresProbabilidad, 0);
+                        values.put(Utilidades.SitioInteresImpacto, 0);
                         Long idResultante = insert.insert(Utilidades.TablaSitioInteresRiesgos, Utilidades.IdSitioInteresRiesgo, values);
                         insert.close();
-                        return String.valueOf(idResultante);
+                        return "creado "+idResultante;
 
                     }
                 } catch (JSONException e) {
@@ -196,26 +194,40 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         //
         return Resultado;
     }
-    private void MostrarLista(){
-        /*
+    public void MostrarLista(String IdSitioInteres){
+        SQLiteDatabase select = conexionSQLiteHelper.getReadableDatabase();
+        //Cursor cursor = select.rawQuery("SELECT * FROM "+Utilidades.TablaSitioInteresRiesgos+" WHERE "+Utilidades.FKIdSitioInteres+" = "+ Integer.parseInt(IdSitioInteres), null);
+        Cursor cursor = select.rawQuery("SELECT * FROM "+Utilidades.TablaSitioInteresRiesgos, null);
+
         list = new ArrayList<>();
 
-        list.add(new SitioInteresRiesgos());
-        list.add(new Cita(Id, Imagen,Tipo,NombreTipo,Descripcion, Fecha, Hora, Titulo));
-        Custom_Adapter  adapter = new Custom_Adapter(getApplicationContext(),list);
-        ListViewCita.setAdapter(adapter);
+        if(cursor.moveToFirst()){
+            do {
+                int Id           = cursor.getInt(0);
+                int IdSitioIntere   = cursor.getInt(1);
+                String Nombre    = cursor.getString(2);
+                int Impacto      = cursor.getInt(3);
+                int Probabilidad = cursor.getInt(4);
+                int Imagen;
+                if(Impacto > 0 && Probabilidad > 0){
+                    Imagen = R.drawable.baseline_done_black_18dp;
+                }
+                else{
+                    Imagen = R.drawable.baseline_cancel_black_18dp;
+                }
+                list.add(new SitioInteresRiesgos(Id,Imagen, Nombre, Impacto, Probabilidad));
 
-        ListViewCita.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            }while (cursor.moveToNext());
+        }
+        SitioInteresAdapter adapter = new SitioInteresAdapter(getApplicationContext(),list);
+        ListViewRiesgos.setAdapter(adapter);
+
+        ListViewRiesgos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cita cita = list.get(position);
-                    Intent intent = new Intent(ListaCitasActivity.this, EncuestaSitioInteres.class);
-                    intent.putExtra("IdUsuario", IdUsuario);
-                    intent.putExtra("IdCita", String.valueOf(cita.Id));
-                    intent.putExtra("Tipo", String.valueOf(cita.Tipo));
-                    startActivity(intent);
+                SitioInteresRiesgos sitioInteresRiesgos = list.get(position);
+                Toast.makeText(getBaseContext(), sitioInteresRiesgos.Id, Toast.LENGTH_SHORT).show();
             }
         });
-         */
     }
 }

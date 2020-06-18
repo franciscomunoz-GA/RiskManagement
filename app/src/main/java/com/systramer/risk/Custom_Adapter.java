@@ -49,17 +49,17 @@ public class Custom_Adapter extends BaseAdapter {
         if(convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.listview_citas,null);
         }
-            icono               = convertView.findViewById(R.id.icon);
-            TextViewTitulo      = convertView.findViewById(R.id.Titulo);
-            TextViewDescripcion = convertView.findViewById(R.id.Descripcion);
-            TextViewFecha       = convertView.findViewById(R.id.Fecha);
-            TextViewHora        = convertView.findViewById(R.id.Hora);
+        icono               = convertView.findViewById(R.id.icon);
+        TextViewTitulo      = convertView.findViewById(R.id.Titulo);
+        TextViewDescripcion = convertView.findViewById(R.id.Descripcion);
+        TextViewFecha       = convertView.findViewById(R.id.Fecha);
+        TextViewHora        = convertView.findViewById(R.id.Hora);
 
-            icono.setImageResource(c.Imagen);
-            TextViewTitulo.setText(c.Titulo);
-            TextViewDescripcion.setText(c.Descripcion);
-            TextViewFecha.setText(c.Fecha);
-            TextViewHora.setText(c.Hora);
+        icono.setImageResource(c.Imagen);
+        TextViewTitulo.setText(c.Titulo);
+        TextViewDescripcion.setText(c.Descripcion);
+        TextViewFecha.setText(c.Fecha);
+        TextViewHora.setText(c.Hora);
 
         return convertView;
     }

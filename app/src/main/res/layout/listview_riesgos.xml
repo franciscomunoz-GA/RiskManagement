@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="10"
+        android:padding="8dp"
+        tools:srcCompat="@drawable/baseline_format_list_bulleted_black_18dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="80"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/NombreRiesgo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="100"
+                android:gravity="center|left"
+                android:text="TextView"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:gravity="center|right"
+                android:fontFamily="sans-serif-black"
+                android:text="Impacto"
+                android:textColor="#1A237E" />
+
+            <TextView
+                android:id="@+id/Impacto"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:gravity="center|right"
+                android:text="TextView"
+                android:textColor="#424242"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center|right"
+                android:text="Probabilidad"
+                android:textColor="#1A237E" />
+
+            <TextView
+                android:id="@+id/Probabilidad"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:gravity="center|right"
+                android:text="TextView"
+                android:textColor="#424242"
+                android:textStyle="normal"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

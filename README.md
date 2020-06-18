@@ -1,3 +1,5 @@
+# 2020-06-18 (v 1.6.1)
+    Se busca por la base de datos SQLite y se arma el listado de interés y sus riesgos
 # 2020-06-18 (v 1.6.0)
     Se valida duplicidad y se insertan las los sitios de interés y sus riesgos
 # 2020-06-18 (v 1.5.0)
