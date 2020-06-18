@@ -55,6 +55,11 @@ public class ListaCitasActivity extends AppCompatActivity {
         TraerInformacion();
 
     }
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+        onStop();
+    }
     private void TraerInformacion(){
         progressBar.setVisibility(View.VISIBLE);
         final JSONObject Parametros = new JSONObject();
@@ -109,17 +114,19 @@ public class ListaCitasActivity extends AppCompatActivity {
                                     if(cita.Tipo == 1){
                                         Intent intent = new Intent(ListaCitasActivity.this, EncuestaSitioInteres.class);
                                         intent.putExtra("IdUsuario", IdUsuario);
-                                        intent.putExtra("IdCita", cita.Id);
-                                        intent.putExtra("Tipo", cita.Tipo);
+                                        intent.putExtra("IdCita", String.valueOf(cita.Id));
+                                        intent.putExtra("Tipo", String.valueOf(cita.Tipo));
                                         startActivity(intent);
                                     }
                                     else{
+                                        /*
                                         //Activity para Clientes
                                         Intent intent = new Intent(ListaCitasActivity.this, EncuestaSitioInteres.class);
                                         intent.putExtra("IdUsuario", IdUsuario);
-                                        intent.putExtra("IdCita", cita.Id);
-                                        intent.putExtra("Tipo", cita.Tipo);
+                                        intent.putExtra("IdCita", String.valueOf(cita.Id));
+                                        intent.putExtra("Tipo", String.valueOf(cita.Tipo));
                                         startActivity(intent);
+                                        */
                                     }
                                 }
                             });

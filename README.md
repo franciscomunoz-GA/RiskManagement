@@ -1,7 +1,10 @@
+# 2020-06-18 (v 1.6.0)
+    Se valida duplicidad y se insertan las los sitios de interés y sus riesgos
+# 2020-06-18 (v 1.5.0)
+    Se agrega SQLite al proyecto
 # 2020-06-17 (V 1.4.1)
     Se cambian los iconos dependiendo del tipo de cita
     Se crea el activity para la encuesta del sitio de interés
-
 # 2020-06-17 (V 1.3.2)
     Se muestra el listiew con información tomada de la API
 # 2020-06-17 (V 1.3.1)
