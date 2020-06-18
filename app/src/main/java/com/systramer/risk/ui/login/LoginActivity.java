@@ -209,12 +209,14 @@ public class LoginActivity extends AppCompatActivity {
                                 break;
                             default:
                                 JSONObject Informacion = new JSONObject(Data);
-                                int Id        = Informacion.getInt("Id");
-                                String Nombre = Informacion.getString("Nombre");
+                                String Id        = Informacion.getString("Id");
+                                String Nombre    = Informacion.getString("Nombre");
                                 String Telefono  = Informacion.getString("Telefono");
                                 Toast.makeText(getApplicationContext(), "Bienvenido "+Nombre, Toast.LENGTH_SHORT).show();
                                 snackbar.make(layout, "Bienvenido "+Nombre, Snackbar.LENGTH_LONG).show();
-                                startActivity(new Intent(LoginActivity.this, ListaCitasActivity.class));
+                                Intent intent = new Intent(LoginActivity.this, ListaCitasActivity.class);
+                                intent.putExtra("IdUsuario", Id);
+                                startActivity(intent);
                                 finish();
                                 break;
                         }
