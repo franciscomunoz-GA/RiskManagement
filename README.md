@@ -1,3 +1,7 @@
+# 2020-06-18 (v 1.7.0)
+    Se crea dialog
+    Se modifica los registros
+    Se muestra listado de los riesgos
 # 2020-06-18 (v 1.6.2)
     Correcciones
 # 2020-06-18 (v 1.6.1)

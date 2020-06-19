@@ -3,6 +3,7 @@ package com.systramer.risk;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,11 +12,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -36,6 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EncuestaSitioInteres extends AppCompatActivity {
+    String Impacto, Probabilidad;
+    TextView TImpacto, TProbabilidad;
+    Button Guardar, Cerrar;
 
     String IdUsuario;
     String IdCita;
@@ -199,7 +206,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         //
         return Resultado;
     }
-    public void MostrarLista(int IdSitioInteres){
+    public void MostrarLista(final int IdSitioInteres){
         SQLiteDatabase select = conexionSQLiteHelper.getReadableDatabase();
         //Cursor cursor = select.rawQuery("SELECT * FROM SitioInteresRiesgos",null);
         //Cursor cursor = select.rawQuery("SELECT * FROM "+Utilidades.TablaSitioInteresRiesgos, null);
@@ -241,11 +248,50 @@ public class EncuestaSitioInteres extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SitioInteresRiesgos sitioInteresRiesgos = list.get(position);
                 Toast.makeText(getBaseContext(), String.valueOf(sitioInteresRiesgos.Id), Toast.LENGTH_SHORT).show();
-                OpenDialog();
+                OpenDialog(sitioInteresRiesgos.Id, sitioInteresRiesgos.Riesgo, IdSitioInteres);
             }
         });
     }
-    public void OpenDialog(){
+    public void OpenDialog(final int Id, final String Riesgo, final int IdSitioInteres){
+        final Dialog dialog = new Dialog(EncuestaSitioInteres.this, R.style.CustomDialogTheme);
 
+        LayoutInflater layoutInflater = this.getLayoutInflater();
+        View custom_dialog = layoutInflater.inflate(R.layout.dialog,null);
+
+        TImpacto = custom_dialog.findViewById(R.id.Impacto);
+        TProbabilidad = custom_dialog.findViewById(R.id.Probabilidad);
+
+        Guardar = custom_dialog.findViewById(R.id.btn_Guardar);
+        Cerrar = custom_dialog.findViewById(R.id.btn_Cerrar);
+
+        Guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Impacto = TImpacto.getText().toString();
+                Probabilidad = TProbabilidad.getText().toString();
+                SQLiteDatabase update = conexionSQLiteHelper.getReadableDatabase();
+                ContentValues values = new ContentValues();
+                values.put(Utilidades.SitioInteresImpacto, Impacto);
+                values.put(Utilidades.SitioInteresProbabilidad, Probabilidad);
+
+                update.update(Utilidades.TablaSitioInteresRiesgos, values, Utilidades.IdSitioInteresRiesgo+"=?", new String[]{String.valueOf(Id)});
+                update.close();
+                MostrarLista(IdSitioInteres);
+                dialog.dismiss();
+            }
+        });
+
+        Cerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.setContentView(custom_dialog);
+
+        dialog.setTitle(Riesgo);
+
+        dialog.show();
     }
 }
