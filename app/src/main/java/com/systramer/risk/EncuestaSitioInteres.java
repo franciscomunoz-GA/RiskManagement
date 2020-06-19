@@ -365,7 +365,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                     if(Mensaje.equals("Consulta Exitosa")){
                         String Data = obj.getString("Data");
                         if(Data == "true"){
-                            Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Registros guardados correctamente", Toast.LENGTH_LONG).show();
                             finish();
                         }
                         else{

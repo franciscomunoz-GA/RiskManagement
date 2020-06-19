@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EncuestaSitioInteres"></activity>
+        <activity android:name=".EncuestaClientes"></activity>
+        <activity android:name=".EncuestaSitioInteres" />
         <activity android:name=".ListaCitasActivity" />
         <activity
             android:name=".ui.login.LoginActivity"

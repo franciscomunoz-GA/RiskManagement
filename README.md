@@ -1,3 +1,7 @@
+# 2020-06-18 (v 1.8.1)
+    Se cambia el mensaje al responder la encuesta
+    Se crea ima mieva actividad
+    Se respalda la información para implementar EXPANSION PANEL
 # 2020-06-18 (v 1.8.0)
     Se valida que se respondieran todos los riesgos
     Se Guarda la información mediante una API
