@@ -1,3 +1,7 @@
+# 2020-06-18 (v 1.8.0)
+    Se valida que se respondieran todos los riesgos
+    Se Guarda la información mediante una API
+    Se recarga la tabla de citas ya que en teoria se respondió
 # 2020-06-18 (v 1.7.0)
     Se crea dialog
     Se modifica los registros

@@ -208,8 +208,6 @@ public class EncuestaSitioInteres extends AppCompatActivity {
     }
     public void MostrarLista(final int IdSitioInteres){
         SQLiteDatabase select = conexionSQLiteHelper.getReadableDatabase();
-        //Cursor cursor = select.rawQuery("SELECT * FROM SitioInteresRiesgos",null);
-        //Cursor cursor = select.rawQuery("SELECT * FROM "+Utilidades.TablaSitioInteresRiesgos, null);
 
         String[] parameters = { String.valueOf(IdSitioInteres) };
         String[] campos = { Utilidades.IdSitioInteresRiesgo, Utilidades.FKIdSitioInteres, Utilidades.NombreSitioInteresRiesgo, Utilidades.SitioInteresImpacto, Utilidades.SitioInteresProbabilidad };
@@ -247,7 +245,6 @@ public class EncuestaSitioInteres extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SitioInteresRiesgos sitioInteresRiesgos = list.get(position);
-                Toast.makeText(getBaseContext(), String.valueOf(sitioInteresRiesgos.Id), Toast.LENGTH_SHORT).show();
                 OpenDialog(sitioInteresRiesgos.Id, sitioInteresRiesgos.Riesgo, IdSitioInteres);
             }
         });
@@ -293,5 +290,112 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         dialog.setTitle(Riesgo);
 
         dialog.show();
+    }
+    public void Cerrar(View view){
+        finish();
+    }
+    public void Guardar(View view) {
+        boolean Resultado = false;
+        SQLiteDatabase select = conexionSQLiteHelper.getReadableDatabase();
+
+        String[] parameters = {IdCita};
+        String[] campos = {Utilidades.IdSitioInteresRiesgo, Utilidades.FKIdSitioInteres, Utilidades.NombreSitioInteresRiesgo, Utilidades.SitioInteresImpacto, Utilidades.SitioInteresProbabilidad};
+
+        Cursor cursor = select.query(Utilidades.TablaSitioInteresRiesgos, campos, Utilidades.FKIdSitioInteres + "=?", parameters, null, null, null);
+        final JSONArray Riesgos = new JSONArray();
+        if (cursor.moveToFirst()) {
+            do {
+                int Id = cursor.getInt(0);
+                int IdSitioIntere = cursor.getInt(1);
+                String Nombre = cursor.getString(2);
+                int Impacto = cursor.getInt(3);
+                int Probabilidad = cursor.getInt(4);
+                int Imagen;
+
+                final JSONObject Calificacion = new JSONObject();
+
+                if(Impacto > 0 && Probabilidad > 0){
+
+                    Resultado = true;
+                    try {
+                        Calificacion.put("IdRSI", Id);
+                        Calificacion.put("Probabilidad", Probabilidad);
+                        Calificacion.put("Impacto", Impacto);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Riesgos.put(Calificacion);
+                }
+                else{
+                    Toast.makeText(getBaseContext(), "El riesgo: "+Nombre+" no ha sido evaluado",Toast.LENGTH_LONG).show();
+                    Resultado = false;
+                    break;
+                }
+
+            } while (cursor.moveToNext());
+            cursor.close();
+
+            if(Resultado){
+                MandarResultados(Riesgos);
+            }
+        }
+    }
+    private void  MandarResultados(JSONArray Riesgos){
+        final JSONObject Parametros = new JSONObject();
+        try {
+        Parametros.put("IdEncuesta", IdCita);
+        Parametros.put("Tipo", 1);
+        Parametros.put("IdUsuario", IdUsuario);
+        Parametros.put("Riesgos", Riesgos);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String savedata = Parametros.toString();
+        String URL = "http://cuenta-cuentas.com/backend/public/api/Responder/Encuesta";
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    JSONObject obj = new JSONObject(response);
+                    String Mensaje = obj.getString("Message");
+                    if(Mensaje.equals("Consulta Exitosa")){
+                        String Data = obj.getString("Data");
+                        if(Data == "true"){
+                            Toast.makeText(getApplicationContext(), Mensaje, Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Error al insertar", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            public String getBodyContentType(){ return "application/json; charset=utf-8";}
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return savedata == null ? null: savedata.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }

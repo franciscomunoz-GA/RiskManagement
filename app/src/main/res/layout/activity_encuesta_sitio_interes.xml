@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EncuestaSitioInteres">
+
     <include
         layout="@layout/toolbar_encuesta"
         android:id="@+id/toolbar"/>
@@ -28,4 +29,39 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/ListaRiesgos"
         tools:layout_editor_absoluteX="0dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="#B71C1C"
+            android:onClick="Cerrar"
+            android:text="Cancelar" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:onClick="Guardar"
+            android:text="Guardar" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

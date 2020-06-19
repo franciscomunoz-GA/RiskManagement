@@ -56,6 +56,11 @@ public class ListaCitasActivity extends AppCompatActivity {
 
     }
     @Override
+    protected void onResume() {
+        super.onResume();
+        TraerInformacion();
+    }
+    @Override
     public void onBackPressed() {
         // super.onBackPressed();
         onStop();
