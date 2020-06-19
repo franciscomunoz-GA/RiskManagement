@@ -1,14 +1,19 @@
 package com.systramer.risk;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EncuestaSitioInteres extends AppCompatActivity {
+
     String IdUsuario;
     String IdCita;
     String Tipo;
@@ -52,7 +58,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         Tipo      = intent.getStringExtra("Tipo");
         progressBar = findViewById(R.id.progressBarRiesgos);
         ListViewRiesgos = findViewById(R.id.ListaRiesgos);
-        conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 1);
+        conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 2);
 
         TraerInformacion();
     }
@@ -89,19 +95,18 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                             JSONArray ListaRiesgos = new JSONArray(Riesgos);
                             for (int j = 0; j < ListaRiesgos.length(); j++) {
                                 JSONObject riesgo = ListaRiesgos.getJSONObject(j);
-                                riesgo.put("IdSitioInteres", IdEncuesta);
+                                int IdSitioInteres = object.getInt("IdEncuesta");
+                                riesgo.put("IdSitioInteres", IdSitioInteres);
                                 //Creamos el riesgo en SQLite
                                 String R = InsertarRegistro(Utilidades.TablaSitioInteresRiesgos, riesgo);
-                                Toast.makeText(getApplicationContext(), "Riesgo: "+ R, Toast.LENGTH_SHORT).show();
+                                MostrarLista(object.getInt("IdEncuesta"));
                             }
-                            MostrarLista(IdEncuesta);
                         }
                     }
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-                    finish();
                 }
             }
         }, new Response.ErrorListener() {
@@ -160,9 +165,9 @@ public class EncuestaSitioInteres extends AppCompatActivity {
             case Utilidades.TablaSitioInteresRiesgos:
                 try {
 
-                    int IdRiesgo = Parametros.getInt("IdRSI");
+                    int IdRiesgo        = Parametros.getInt("IdRSI");
                     int IdSitioInteres  = Parametros.getInt("IdSitioInteres");
-                    String Nombre  = Parametros.getString("Riesgo");
+                    String Nombre       = Parametros.getString("Riesgo");
 
                     String[] parameters = { String.valueOf(IdRiesgo) };
                     String[] campos = { Utilidades.IdSitioInteresRiesgo };
@@ -194,20 +199,24 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         //
         return Resultado;
     }
-    public void MostrarLista(String IdSitioInteres){
+    public void MostrarLista(int IdSitioInteres){
         SQLiteDatabase select = conexionSQLiteHelper.getReadableDatabase();
-        //Cursor cursor = select.rawQuery("SELECT * FROM "+Utilidades.TablaSitioInteresRiesgos+" WHERE "+Utilidades.FKIdSitioInteres+" = "+ Integer.parseInt(IdSitioInteres), null);
-        Cursor cursor = select.rawQuery("SELECT * FROM "+Utilidades.TablaSitioInteresRiesgos, null);
+        //Cursor cursor = select.rawQuery("SELECT * FROM SitioInteresRiesgos",null);
+        //Cursor cursor = select.rawQuery("SELECT * FROM "+Utilidades.TablaSitioInteresRiesgos, null);
+
+        String[] parameters = { String.valueOf(IdSitioInteres) };
+        String[] campos = { Utilidades.IdSitioInteresRiesgo, Utilidades.FKIdSitioInteres, Utilidades.NombreSitioInteresRiesgo, Utilidades.SitioInteresImpacto, Utilidades.SitioInteresProbabilidad };
+
+        Cursor cursor = select.query(Utilidades.TablaSitioInteresRiesgos,campos, Utilidades.FKIdSitioInteres+"=?", parameters, null, null, null);
 
         list = new ArrayList<>();
-
         if(cursor.moveToFirst()){
             do {
-                int Id           = cursor.getInt(0);
-                int IdSitioIntere   = cursor.getInt(1);
-                String Nombre    = cursor.getString(2);
-                int Impacto      = cursor.getInt(3);
-                int Probabilidad = cursor.getInt(4);
+                int Id            = cursor.getInt(0);
+                int IdSitioIntere = cursor.getInt(1);
+                String Nombre     = cursor.getString(2);
+                int Impacto       = cursor.getInt(3);
+                int Probabilidad  = cursor.getInt(4);
                 int Imagen;
                 if(Impacto > 0 && Probabilidad > 0){
                     Imagen = R.drawable.baseline_done_black_18dp;
@@ -218,6 +227,11 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                 list.add(new SitioInteresRiesgos(Id,Imagen, Nombre, Impacto, Probabilidad));
 
             }while (cursor.moveToNext());
+            cursor.close();
+        }
+        else{
+            Toast.makeText(getBaseContext(), "No hay riesgos por mostrar",Toast.LENGTH_LONG).show();
+            finish();
         }
         SitioInteresAdapter adapter = new SitioInteresAdapter(getApplicationContext(),list);
         ListViewRiesgos.setAdapter(adapter);
@@ -226,8 +240,12 @@ public class EncuestaSitioInteres extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SitioInteresRiesgos sitioInteresRiesgos = list.get(position);
-                Toast.makeText(getBaseContext(), sitioInteresRiesgos.Id, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), String.valueOf(sitioInteresRiesgos.Id), Toast.LENGTH_SHORT).show();
+                OpenDialog();
             }
         });
+    }
+    public void OpenDialog(){
+
     }
 }

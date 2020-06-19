@@ -11,7 +11,8 @@ public class Utilidades {
     public static final String FKIdCliente       = "IdCliente";
     public static final String NombreClienteArea = "Nombre";
     public static final String Area              = "Area";
-    public static final String ClienteAreas      = "CREATE TABLE "+TablaClienteAreas+" ("+IdClienteArea+" INTEGER, "+FKIdCliente+" INTEGER, "+NombreClienteArea+" TEXT, "+Area+" TEXT)";
+    public static final String EnviadoClienteAreas = "EnviadoClienteAreas";
+    public static final String ClienteAreas      = "CREATE TABLE "+TablaClienteAreas+" ("+IdClienteArea+" INTEGER, "+FKIdCliente+" INTEGER, "+NombreClienteArea+" TEXT, "+Area+" TEXT,"+EnviadoClienteAreas+" INTEGER)";
 
     public static final String TablaClienteAreasRiesgos = "ClienteAreasRiesgos";
     public static final String IdClienteAreasRiesgo     = "Id";
@@ -24,7 +25,8 @@ public class Utilidades {
     public static final String TablaSitioInteres  = "SitioInteres";
     public static final String IdSitioInteres     = "Id";
     public static final String NombreSitioInteres = "Nombre";
-    public static final String SitioInteres       = "CREATE TABLE "+TablaSitioInteres+" ("+IdSitioInteres+" INTEGER, "+NombreSitioInteres+" TEXT)";
+    public static final String EnviadoSitioInteres = "SitioInteresEnviado";
+    public static final String SitioInteres       = "CREATE TABLE "+TablaSitioInteres+" ("+IdSitioInteres+" INTEGER, "+NombreSitioInteres+" TEXT,"+EnviadoSitioInteres+" INTEGER)";
 
     public static final String TablaSitioInteresRiesgos = "SitioInteresRiesgos";
     public static final String IdSitioInteresRiesgo     = "Id";
