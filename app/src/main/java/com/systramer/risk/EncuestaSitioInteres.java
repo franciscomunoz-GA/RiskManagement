@@ -2,6 +2,7 @@ package com.systramer.risk;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -31,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 import com.systramer.risk.Utilidades.Utilidades;
 
 import org.json.JSONArray;
@@ -56,10 +58,15 @@ public class EncuestaSitioInteres extends AppCompatActivity {
     private RequestQueue requestQueue;
     ProgressBar progressBar;
     SitioInteresAdapter adapter;
+
+    private Snackbar snackbar;
+    ConstraintLayout layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encuesta_sitio_interes);
+
+        layout = (ConstraintLayout) findViewById(R.id.container);
 
         Intent intent = getIntent();
         IdCita    = intent.getStringExtra("IdCita");
@@ -192,6 +199,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                         values.put(Utilidades.NombreSitioInteresRiesgo, Nombre);
                         values.put(Utilidades.SitioInteresProbabilidad, 0);
                         values.put(Utilidades.SitioInteresImpacto, 0);
+                        values.put(Utilidades.SitioInteresRespondido, "Pendiente");
                         Long idResultante = insert.insert(Utilidades.TablaSitioInteresRiesgos, Utilidades.IdSitioInteresRiesgo, values);
                         insert.close();
                         return "creado "+idResultante;
@@ -212,7 +220,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         SQLiteDatabase select = conexionSQLiteHelper.getReadableDatabase();
 
         String[] parameters = { String.valueOf(IdSitioInteres) };
-        String[] campos = { Utilidades.IdSitioInteresRiesgo, Utilidades.FKIdSitioInteres, Utilidades.NombreSitioInteresRiesgo, Utilidades.SitioInteresImpacto, Utilidades.SitioInteresProbabilidad };
+        String[] campos = { Utilidades.IdSitioInteresRiesgo, Utilidades.FKIdSitioInteres, Utilidades.NombreSitioInteresRiesgo, Utilidades.SitioInteresImpacto, Utilidades.SitioInteresProbabilidad, Utilidades.SitioInteresRespondido};
 
         Cursor cursor = select.query(Utilidades.TablaSitioInteresRiesgos,campos, Utilidades.FKIdSitioInteres+"=?", parameters, null, null, null);
 
@@ -220,10 +228,12 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         if(cursor.moveToFirst()){
             do {
                 int Id            = cursor.getInt(0);
-                int IdSitioIntere = cursor.getInt(1);
+                int IdSitioInter  = cursor.getInt(1);
                 String Nombre     = cursor.getString(2);
                 int Impacto       = cursor.getInt(3);
                 int Probabilidad  = cursor.getInt(4);
+                String Respondido = cursor.getString(5);
+
                 int Imagen;
                 if(Impacto > 0 && Probabilidad > 0){
                     Imagen = R.drawable.baseline_done_black_18dp;
@@ -231,7 +241,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                 else{
                     Imagen = R.drawable.baseline_cancel_black_18dp;
                 }
-                list.add(new SitioInteresRiesgos(Id,Imagen, Nombre, Impacto, Probabilidad));
+                list.add(new SitioInteresRiesgos(Id,Imagen, Nombre, Impacto, Probabilidad, Respondido));
 
             }while (cursor.moveToNext());
             cursor.close();
@@ -247,7 +257,14 @@ public class EncuestaSitioInteres extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SitioInteresRiesgos sitioInteresRiesgos = list.get(position);
-                OpenDialog(sitioInteresRiesgos.Id, sitioInteresRiesgos.Riesgo, IdSitioInteres);
+
+                if(sitioInteresRiesgos.Respondido.equals("Concretado")){
+                    snackbar.make(layout, "El riesgo ya fue evaluado", Snackbar.LENGTH_LONG).show();
+                }
+                else{
+                    OpenDialog(sitioInteresRiesgos.Id, sitioInteresRiesgos.Riesgo, IdSitioInteres);
+                }
+
             }
         });
     }
@@ -276,6 +293,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                 ContentValues values = new ContentValues();
                 values.put(Utilidades.SitioInteresImpacto, Impacto);
                 values.put(Utilidades.SitioInteresProbabilidad, Probabilidad);
+                values.put(Utilidades.SitioInteresRespondido, "Concretado");
 
                 update.update(Utilidades.TablaSitioInteresRiesgos, values, Utilidades.IdSitioInteresRiesgo+"=?", new String[]{String.valueOf(Id)});
                 update.close();

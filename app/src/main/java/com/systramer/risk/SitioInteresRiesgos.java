@@ -6,6 +6,16 @@ public class SitioInteresRiesgos{
     public String Riesgo;
     public int Impacto;
     public int Probabilidad;
+    public String Respondido;
+
+    public SitioInteresRiesgos(int id, int imagen, String riesgo, int impacto, int probabilidad, String respondido) {
+        Id = id;
+        Imagen = imagen;
+        Riesgo = riesgo;
+        Impacto = impacto;
+        Probabilidad = probabilidad;
+        Respondido = respondido;
+    }
 
     public int getId() {
         return Id;
@@ -47,11 +57,11 @@ public class SitioInteresRiesgos{
         Probabilidad = probabilidad;
     }
 
-    public SitioInteresRiesgos(int id, int imagen, String riesgo, int impacto, int probabilidad) {
-        Id = id;
-        Imagen = imagen;
-        Riesgo = riesgo;
-        Impacto = impacto;
-        Probabilidad = probabilidad;
+    public String getRespondido() {
+        return Respondido;
+    }
+
+    public void setRespondido(String respondido) {
+        Respondido = respondido;
     }
 }

@@ -1,3 +1,7 @@
+# 2020-06-18 (v 1.8.3)
+    Se da mejor formato
+    Se guarda en base de datos si el riesgo ya fue contestado
+    Se valida que no pueda responderla nuevamente
 # 2020-06-18 (v 1.8.2)
     Poder seleccionar diferentes fechas
 # 2020-06-18 (v 1.8.1)

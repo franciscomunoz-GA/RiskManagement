@@ -21,7 +21,7 @@ public class Utilidades {
     public static final String ClienteImpacto           = "Impacto";
     public static final String ClienteProbabilidad      = "Probabilidad";
     public static final String ClienteRespondido        = "Respondido";
-    public static final String ClienteAreasRiesgos      = "CREATE TABLE "+TablaClienteAreasRiesgos+" ("+IdClienteAreasRiesgo+" INTEGER, "+FKIdClienteArea+" INTEGER, "+ClienteAreasRiesgo+" TEXT, "+ClienteImpacto+" INTEGER, "+ClienteProbabilidad+" INTEGER, "+ClienteRespondido+" INTEGER)";
+    public static final String ClienteAreasRiesgos      = "CREATE TABLE "+TablaClienteAreasRiesgos+" ("+IdClienteAreasRiesgo+" INTEGER, "+FKIdClienteArea+" INTEGER, "+ClienteAreasRiesgo+" TEXT, "+ClienteImpacto+" INTEGER, "+ClienteProbabilidad+" INTEGER, "+ClienteRespondido+" TEXT)";
 
     public static final String TablaSitioInteres   = "SitioInteres";
     public static final String IdSitioInteres      = "Id";
@@ -36,5 +36,5 @@ public class Utilidades {
     public static final String SitioInteresImpacto      = "Impacto";
     public static final String SitioInteresProbabilidad = "Probabilidad";
     public static final String SitioInteresRespondido   = "Respondido";
-    public static final String SitioInteresRiesgos      = "CREATE TABLE "+TablaSitioInteresRiesgos+" ("+IdSitioInteresRiesgo+" INTEGER, "+FKIdSitioInteres+" INTEGER, "+NombreSitioInteresRiesgo+" TEXT, "+SitioInteresImpacto+" INTEGER, "+SitioInteresProbabilidad+" INTEGER, "+SitioInteresRespondido+" INTEGER)";
+    public static final String SitioInteresRiesgos      = "CREATE TABLE "+TablaSitioInteresRiesgos+" ("+IdSitioInteresRiesgo+" INTEGER, "+FKIdSitioInteres+" INTEGER, "+NombreSitioInteresRiesgo+" TEXT, "+SitioInteresImpacto+" INTEGER, "+SitioInteresProbabilidad+" INTEGER, "+SitioInteresRespondido+" TEXT)";
 }

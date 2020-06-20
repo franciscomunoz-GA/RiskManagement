@@ -40,6 +40,7 @@ public class SitioInteresAdapter extends BaseAdapter {
         TextView TextViewTitulo;
         TextView TextViewImpacto;
         TextView TextViewProbabilidad;
+        TextView TextViewRespondido;
         SitioInteresRiesgos s = list.get(position);
 
         if(convertView == null){
@@ -49,12 +50,13 @@ public class SitioInteresAdapter extends BaseAdapter {
         TextViewTitulo       = convertView.findViewById(R.id.NombreRiesgo);
         TextViewImpacto      = convertView.findViewById(R.id.Impacto);
         TextViewProbabilidad = convertView.findViewById(R.id.Probabilidad);
+        TextViewRespondido   = convertView.findViewById(R.id.Respondido);
 
         icono.setImageResource(s.Imagen);
         TextViewTitulo.setText(s.Riesgo);
         TextViewImpacto.setText(String.valueOf(s.Impacto));
         TextViewProbabilidad.setText(String.valueOf(s.Probabilidad));
-
+        TextViewRespondido.setText(s.Respondido);
         return convertView;
     }
 }

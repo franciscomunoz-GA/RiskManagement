@@ -135,6 +135,7 @@ public class ListaCitasActivity extends AppCompatActivity {
                                         if(cita.Tipo == 1){
                                             Intent intent = new Intent(ListaCitasActivity.this, EncuestaSitioInteres.class);
                                             intent.putExtra("IdUsuario", IdUsuario);
+                                            intent.putExtra("Titulo", "Riesgos de "+cita.Titulo);
                                             intent.putExtra("IdCita", String.valueOf(cita.Id));
                                             intent.putExtra("Tipo", String.valueOf(cita.Tipo));
                                             startActivity(intent);
