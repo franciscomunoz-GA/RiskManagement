@@ -28,4 +28,46 @@
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteY="79dp"
         app:layout_constraintTop_toBottomOf="@+id/ListaCitas"/>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/descanso"
+        tools:layout_editor_absoluteX="102dp"
+        tools:layout_editor_absoluteY="373dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No hay inspeccion en este día"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        android:visibility="invisible"/>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:background="#FFFFFF"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="Calendario"
+            android:onClick="Calendario"
+            android:tint="@color/colorWhite"
+            app:backgroundTint="#FFFFFF"
+            app:srcCompat="@drawable/baseline_date_range_white_18dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

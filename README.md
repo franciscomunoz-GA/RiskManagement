@@ -1,3 +1,5 @@
+# 2020-06-18 (v 1.8.2)
+    Poder seleccionar diferentes fechas
 # 2020-06-18 (v 1.8.1)
     Se cambia el mensaje al responder la encuesta
     Se crea ima mieva actividad

@@ -2,21 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:orientation="vertical"
-    android:padding="10dp">
-
+    android:orientation="horizontal"
+    android:padding="0dp"
+    android:layout_margin="0dp">
     <LinearLayout
         android:id="@+id/et_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_margin="8dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/Impacto"
@@ -29,7 +27,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_margin="8dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/Probabilidad"
@@ -48,7 +46,7 @@
                 android:id="@+id/btn_Cerrar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:background="#B71C1C"
                 android:backgroundTint="#B71C1C"
@@ -58,7 +56,7 @@
                 android:id="@+id/btn_Guardar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:text="Guardar" />
         </LinearLayout>

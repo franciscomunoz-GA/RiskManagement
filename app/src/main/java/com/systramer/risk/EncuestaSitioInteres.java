@@ -15,10 +15,12 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -250,10 +252,14 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         });
     }
     public void OpenDialog(final int Id, final String Riesgo, final int IdSitioInteres){
-        final Dialog dialog = new Dialog(EncuestaSitioInteres.this, R.style.CustomDialogTheme);
+        final Dialog dialog = new Dialog(EncuestaSitioInteres.this, R.style.Dialog);
 
         LayoutInflater layoutInflater = this.getLayoutInflater();
         View custom_dialog = layoutInflater.inflate(R.layout.dialog,null);
+        custom_dialog.setElevation(2);
+
+
+        //crear dropdown
 
         TImpacto = custom_dialog.findViewById(R.id.Impacto);
         TProbabilidad = custom_dialog.findViewById(R.id.Probabilidad);
