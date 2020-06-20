@@ -1,3 +1,6 @@
+# 2020-06-18 (v 1.8.4)
+    Se guarda toda la información de cliente-area-riesgos
+    Se muestra listado de las areas por cliente
 # 2020-06-18 (v 1.8.3)
     Se da mejor formato
     Se guarda en base de datos si el riesgo ya fue contestado

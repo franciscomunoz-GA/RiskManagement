@@ -74,7 +74,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         Tipo      = intent.getStringExtra("Tipo");
         progressBar = findViewById(R.id.progressBarRiesgos);
         ListViewRiesgos = findViewById(R.id.ListaRiesgos);
-        conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 2);
+        conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 3);
 
         TraerInformacion();
     }
@@ -248,7 +248,6 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         }
         else{
             Toast.makeText(getBaseContext(), "No hay riesgos por mostrar",Toast.LENGTH_LONG).show();
-            finish();
         }
         SitioInteresAdapter adapter = new SitioInteresAdapter(getApplicationContext(),list);
         ListViewRiesgos.setAdapter(adapter);

@@ -51,6 +51,7 @@ public class ListaCitasActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     ImageView imageView;
     TextView textView;
+    ConexionSQLiteHelper conexionSQLiteHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +67,7 @@ public class ListaCitasActivity extends AppCompatActivity {
         ListViewCita = findViewById(R.id.ListaCitas);
         progressBar = findViewById(R.id.progressBar);
         TraerInformacion(currentDate);
-
+        conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 3);
     }
     @Override
     protected void onResume() {
@@ -141,15 +142,14 @@ public class ListaCitasActivity extends AppCompatActivity {
                                             startActivity(intent);
                                         }
                                         else{
-                                        /*
+
                                         //Activity para Clientes
-                                        Intent intent = new Intent(ListaCitasActivity.this, EncuestaSitioInteres.class);
+                                        Intent intent = new Intent(ListaCitasActivity.this, ListaAreasActivity.class);
                                         intent.putExtra("IdUsuario", IdUsuario);
                                         intent.putExtra("IdCita", String.valueOf(cita.Id));
                                         intent.putExtra("Tipo", String.valueOf(cita.Tipo));
                                         startActivity(intent);
-                                        */
-                                        }
+                                                                                }
                                     }
                                 });
                             }

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EncuestaClientes"></activity>
+        <activity android:name=".ListaAreasActivity"></activity>
+        <activity android:name=".EncuestaClientes" />
         <activity android:name=".EncuestaSitioInteres" />
         <activity android:name=".ListaCitasActivity" />
         <activity
