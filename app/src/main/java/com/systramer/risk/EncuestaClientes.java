@@ -133,7 +133,7 @@ public class EncuestaClientes extends AppCompatActivity {
             }
         });
     }
-    public void OpenDialog(final int Id, final String Riesgo, final int IdCliente, final  int IdArea){
+    public void OpenDialog(final int Id, final String Riesgo, final int IdCliente, final int IdArea){
         final Dialog dialog = new Dialog(EncuestaClientes.this, R.style.Dialog);
 
         LayoutInflater layoutInflater = this.getLayoutInflater();
@@ -154,16 +154,84 @@ public class EncuestaClientes extends AppCompatActivity {
             public void onClick(View v) {
                 Impacto = TImpacto.getText().toString();
                 Probabilidad = TProbabilidad.getText().toString();
-                SQLiteDatabase update = conexionSQLiteHelper.getReadableDatabase();
-                ContentValues values = new ContentValues();
-                values.put(Utilidades.SitioInteresImpacto, Impacto);
-                values.put(Utilidades.SitioInteresProbabilidad, Probabilidad);
-                values.put(Utilidades.SitioInteresRespondido, "Concretado");
+                //TODO CONSUMIR API REST
 
-                update.update(Utilidades.TablaSitioInteresRiesgos, values, Utilidades.IdSitioInteresRiesgo+"=?", new String[]{String.valueOf(Id)});
-                update.close();
-                MostrarLista(IdCliente, IdArea);
-                dialog.dismiss();
+                //Crear JSON para armar el parametro
+                final JSONObject Parametros = new JSONObject();
+                JSONObject Riesgo = new JSONObject();
+                try {
+                    Riesgo.put("IdNombreARiesgo", Id);
+                    Riesgo.put("Probabilidad", Probabilidad);
+                    Riesgo.put("Impacto", Impacto);
+                    JSONArray Riesgos = new JSONArray();
+                    Riesgos.put(Riesgo);
+                    JSONObject Area = new JSONObject();
+                    try {
+                        Area.put("IdNombreArea", IdArea);
+                        Area.put("Riesgos", Riesgos);
+                        JSONArray Areas = new JSONArray();
+                        Areas.put(Area);
+
+                        try {
+                            Parametros.put("IdEncuesta", IdCliente);
+                            Parametros.put("Tipo", 2);
+                            Parametros.put("IdUsuario", IdUsuario);
+                            Parametros.put("Areas", Areas);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final String savedata = Parametros.toString();
+                String URL = "http://cuenta-cuentas.com/backend/public/api/Responder/Encuesta";
+                requestQueue = Volley.newRequestQueue(getApplicationContext());
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            JSONObject obj = new JSONObject(response);
+                            String Mensaje = obj.getString("Message");
+                            if(Mensaje.equals("Consulta Exitosa")){
+                                String Data = obj.getString("Data");
+                                if(Data == "true"){
+                                    int Resultado = ModificarRegistro(Id, IdArea, IdCliente, Integer.parseInt(Probabilidad), Integer.parseInt(Impacto));
+                                    if(Resultado > 0 ){
+                                        MostrarLista(IdCliente, IdArea);
+                                        dialog.dismiss();
+                                    }
+                                }
+
+                            }
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }){
+                    @Override
+                    public String getBodyContentType(){ return "application/json; charset=utf-8";}
+                    @Override
+                    public byte[] getBody() throws AuthFailureError {
+                        try {
+                            return savedata == null ? null: savedata.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+                };
+                requestQueue.add(stringRequest);
             }
         });
 
@@ -179,5 +247,17 @@ public class EncuestaClientes extends AppCompatActivity {
         dialog.setTitle(Riesgo);
 
         dialog.show();
+    }
+    public int ModificarRegistro(int idRiesgo, int idArea, int idCliente, int probabilidad, int impacto){
+        //Guardar en base de datos SQLite
+        SQLiteDatabase update = conexionSQLiteHelper.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Utilidades.ClienteImpacto, impacto);
+        values.put(Utilidades.ClienteProbabilidad, probabilidad);
+        values.put(Utilidades.ClienteRespondido, "Concretado");
+
+        int Resultado = update.update(Utilidades.TablaClienteAreasRiesgos, values, Utilidades.IdClienteAreasRiesgo+"=?", new String[]{String.valueOf(idRiesgo)});
+        update.close();
+        return Resultado;
     }
 }

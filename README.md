@@ -1,3 +1,6 @@
+# 2020-06-20 (v 1.9.0)
+    Se manda responde cada Riesgo por area mediante la API
+    Una vez confirmada por la API se guarda en SQLite
 # 2020-06-20 (v 1.8.5)
     Se muestra la el listado de los riesgos por areas
     se muestra el dialog para cada riesgo
