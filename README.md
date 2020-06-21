@@ -1,3 +1,5 @@
+# 2020-06-21 (v 1.9.5)
+    Se corrige al modificar la información en SQLite, porque se modificaban en todos los riesgos similares
 # 2020-06-21 (v 1.9.4)
     Se corrige al insertar la información en base de datos por validacion de duplicidad estaba mal formada, se corrigen las querys
 # 2020-06-21 (v 1.9.3)

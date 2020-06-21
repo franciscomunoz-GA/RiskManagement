@@ -330,7 +330,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                             if(Mensaje.equals("Consulta Exitosa")){
                                 String Data = obj.getString("Data");
                                 if(Data == "true"){
-                                    int Resultado = ModificarRegistro(Id, Integer.parseInt(Probabilidad), Integer.parseInt(Impacto));
+                                    int Resultado = ModificarRegistro(Id, IdSitioInteres, Integer.parseInt(Probabilidad), Integer.parseInt(Impacto));
                                     if(Resultado > 0 ){
                                         MostrarLista(Integer.parseInt(IdCita));
                                         dialog.dismiss();
@@ -378,7 +378,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
 
         dialog.show();
     }
-    public int ModificarRegistro(int idRiesgo, int probabilidad, int impacto){
+    public int ModificarRegistro(int idRiesgo, int IdSitioInteres, int probabilidad, int impacto){
         //Guardar en base de datos SQLite
         SQLiteDatabase update = conexionSQLiteHelper.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -386,9 +386,11 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         values.put(Utilidades.SitioInteresProbabilidad, probabilidad);
         values.put(Utilidades.SitioInteresRespondido, "Concretado");
 
-        int Resultado = update.update(Utilidades.TablaSitioInteresRiesgos, values, Utilidades.IdSitioInteresRiesgo+"=?", new String[]{String.valueOf(idRiesgo)});
-        update.close();
-        return Resultado;
+        //int Resultado = update.update(Utilidades.TablaSitioInteresRiesgos, values, Utilidades.IdSitioInteresRiesgo+"=?", new String[]{String.valueOf(idRiesgo)});
+
+        //update.close();
+        update.execSQL("UPDATE SitioInteresRiesgos SET Impacto = "+impacto+", Probabilidad = "+probabilidad+" WHERE Id = "+idRiesgo + " AND IdSitioInteres = " + IdSitioInteres);
+        return 1;
     }
     private void  MandarResultados(JSONArray Riesgos){
         final JSONObject Parametros = new JSONObject();

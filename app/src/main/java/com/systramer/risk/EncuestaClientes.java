@@ -254,14 +254,14 @@ public class EncuestaClientes extends AppCompatActivity {
     }
     public int ModificarRegistro(int idRiesgo, int idArea, int idCliente, int probabilidad, int impacto){
         //Guardar en base de datos SQLite
-        SQLiteDatabase update = conexionSQLiteHelper.getReadableDatabase();
+        SQLiteDatabase update = conexionSQLiteHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Utilidades.ClienteImpacto, impacto);
         values.put(Utilidades.ClienteProbabilidad, probabilidad);
         values.put(Utilidades.ClienteRespondido, "Concretado");
+        update.execSQL("UPDATE ClienteAreasRiesgos SET Impacto = "+impacto+", Probabilidad = "+probabilidad+" WHERE Id = "+idRiesgo + " AND IdCliente = " + IdCliente + " AND IdClienteArea = " +idArea);
+        //int Resultado = update.update(Utilidades.TablaClienteAreasRiesgos, values, Utilidades.IdClienteAreasRiesgo+"=?", new String[]{String.valueOf(idRiesgo)});
 
-        int Resultado = update.update(Utilidades.TablaClienteAreasRiesgos, values, Utilidades.IdClienteAreasRiesgo+"=?", new String[]{String.valueOf(idRiesgo)});
-        update.close();
-        return Resultado;
+        return 1;
     }
 }
