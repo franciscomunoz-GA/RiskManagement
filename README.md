@@ -1,16 +1,18 @@
-# 2020-06-18 (v 1.8.4)
+# 2020-06-20 (v 1.8.5)
+    Se muestra la el listado de los riesgos por areas
+    se muestra el dialog para cada riesgo
+# 2020-06-20 (v 1.8.4)
     Se guarda toda la información de cliente-area-riesgos
     Se muestra listado de las areas por cliente
-# 2020-06-18 (v 1.8.3)
+# 2020-06-20 (v 1.8.3)
     Se da mejor formato
     Se guarda en base de datos si el riesgo ya fue contestado
     Se valida que no pueda responderla nuevamente
-# 2020-06-18 (v 1.8.2)
+# 2020-06-19 (v 1.8.2)
     Poder seleccionar diferentes fechas
-# 2020-06-18 (v 1.8.1)
+# 2020-06-19 (v 1.8.1)
     Se cambia el mensaje al responder la encuesta
     Se crea ima mieva actividad
-    Se respalda la información para implementar EXPANSION PANEL
 # 2020-06-18 (v 1.8.0)
     Se valida que se respondieran todos los riesgos
     Se Guarda la información mediante una API

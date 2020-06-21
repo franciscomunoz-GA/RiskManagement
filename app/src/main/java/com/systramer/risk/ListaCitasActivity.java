@@ -70,11 +70,6 @@ public class ListaCitasActivity extends AppCompatActivity {
         conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 3);
     }
     @Override
-    protected void onResume() {
-        super.onResume();
-        TraerInformacion(currentDate);
-    }
-    @Override
     public void onBackPressed() {
         // super.onBackPressed();
         onStop();

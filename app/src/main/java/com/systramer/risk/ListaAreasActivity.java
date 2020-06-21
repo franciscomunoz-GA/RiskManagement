@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -60,14 +61,9 @@ public class ListaAreasActivity extends AppCompatActivity {
 
         ListViewAreas = findViewById(R.id.ListaAreas);
         progressBar = findViewById(R.id.progressBar);
-
+        progressBar.setVisibility(View.VISIBLE);
         conexionSQLiteHelper = new ConexionSQLiteHelper(this, "bd_encuestas", null, 3);
 
-        TraerInformacion();
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
         TraerInformacion();
     }
     private void TraerInformacion(){
@@ -222,7 +218,10 @@ public class ListaAreasActivity extends AppCompatActivity {
                         values.put(Utilidades.IdClienteAreasRiesgo, IdRiesgo);
                         values.put(Utilidades.FKIdClienteArea, IdArea);
                         values.put(Utilidades.NombreClienteRiesgo, Nombre);
-                        insert.insert(Tabla, Utilidades.IdSitioInteresRiesgo, values);
+                        values.put(Utilidades.ClienteProbabilidad, 0);
+                        values.put(Utilidades.ClienteImpacto, 0);
+                        values.put(Utilidades.ClienteRespondido, "Pendiente");
+                        insert.insert(Tabla, Utilidades.IdClienteAreasRiesgo, values);
                         insert.close();
                         InsertarRegistro(Tabla, Parametros);
                     }
@@ -253,13 +252,13 @@ public class ListaAreasActivity extends AppCompatActivity {
         list = new ArrayList<Cita>();
         if(cursor.moveToFirst()){
             do {
-                int Id        = cursor.getInt(0);
+                int IdArea    = cursor.getInt(0);
                 String Nombre = cursor.getString(2);
                 String Area   = cursor.getString(3);
                 int Imagen;
-                Imagen = R.drawable.baseline_format_list_bulleted_black_18dp;
+                Imagen = R.drawable.baseline_list_alt_black_18dp;
 
-                list.add(new Cita(Id, Imagen,2,"Cliente",Area, "", "", Nombre));
+                list.add(new Cita(IdArea, Imagen,2,"Cliente",Area, "", "", Nombre));
 
             }while (cursor.moveToNext());
             cursor.close();
@@ -274,8 +273,13 @@ public class ListaAreasActivity extends AppCompatActivity {
         ListViewAreas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cita sitioInteresRiesgos = list.get(position);
-
+                Cita area = list.get(position);
+                Intent intent = new Intent(ListaAreasActivity.this, EncuestaClientes.class);
+                intent.putExtra("IdUsuario", IdUsuario);
+                intent.putExtra("IdCliente", IdCita);
+                intent.putExtra("IdArea", String.valueOf(area.Id));
+                intent.putExtra("Titulo", "Riesgos de "+area.Titulo);
+                startActivity(intent);
             }
         });
     }
