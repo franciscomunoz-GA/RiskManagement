@@ -12,7 +12,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -274,12 +279,11 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         View custom_dialog = layoutInflater.inflate(R.layout.dialog,null);
         custom_dialog.setElevation(2);
 
-
-        //crear dropdown
-
         TImpacto = custom_dialog.findViewById(R.id.Impacto);
         TProbabilidad = custom_dialog.findViewById(R.id.Probabilidad);
 
+        TImpacto.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+        TProbabilidad.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
         Guardar = custom_dialog.findViewById(R.id.btn_Guardar);
         Cerrar = custom_dialog.findViewById(R.id.btn_Cerrar);
 
@@ -330,7 +334,6 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                                         dialog.dismiss();
                                     }
                                 }
-
                             }
                         }
                         catch (JSONException e) {

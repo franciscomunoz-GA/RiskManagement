@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="Listado de riesgos"
+        android:text="Listado de áreas"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
 </com.google.android.material.appbar.MaterialToolbar>

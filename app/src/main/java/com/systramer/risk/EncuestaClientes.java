@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -145,6 +146,9 @@ public class EncuestaClientes extends AppCompatActivity {
 
         TImpacto = custom_dialog.findViewById(R.id.Impacto);
         TProbabilidad = custom_dialog.findViewById(R.id.Probabilidad);
+
+        TImpacto.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+        TProbabilidad.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
 
         Guardar = custom_dialog.findViewById(R.id.btn_Guardar);
         Cerrar = custom_dialog.findViewById(R.id.btn_Cerrar);

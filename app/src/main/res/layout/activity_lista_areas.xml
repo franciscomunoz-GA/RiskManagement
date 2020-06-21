@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ListaAreasActivity">
     <include
-        layout="@layout/toolbar"
+        layout="@layout/toolbar_areas"
         android:id="@+id/toolbar"/>
 
     <ListView

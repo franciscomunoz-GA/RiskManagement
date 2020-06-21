@@ -1,3 +1,7 @@
+# 2020-06-21 (v 1.9.3)
+    Se agrega un nuevo toolbar
+# 2020-06-21 (v 1.9.2)
+    Se agrega validacion para que solo se pueda seleccionar de un rango del 1 al 10
 # 2020-06-20 (v 1.9.1)
     Se corrige error al intentar insertar por primera vez los riesgos
     Se quita la validación de minimo 8 carácteres del login
