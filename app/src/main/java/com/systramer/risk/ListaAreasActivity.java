@@ -94,7 +94,9 @@ public class ListaAreasActivity extends AppCompatActivity {
                             JSONObject cliente = Citas.getJSONObject(i);
 
                             String IdCliente = InsertarRegistro(Utilidades.TablaClientes, cliente);
-
+                            if(IdCliente == ""){
+                                IdCliente = InsertarRegistro(Utilidades.TablaClientes, cliente);
+                            }
                             String Areas = cliente.getString("Areas");
                             JSONArray ListaAreas = new JSONArray(Areas);
                             for (int j = 0; j < ListaAreas.length(); j++) {
@@ -103,7 +105,9 @@ public class ListaAreasActivity extends AppCompatActivity {
                                 Area.put("IdCliente", Integer.parseInt(IdCliente));
 
                                 String IdArea = InsertarRegistro(Utilidades.TablaClienteAreas, Area);
-
+                                if(IdArea == ""){
+                                    IdArea = InsertarRegistro(Utilidades.TablaClienteAreas, Area);
+                                }
                                 String Riesgos = Area.getString("Riesgos");
                                 JSONArray ListaRiesgos = new JSONArray(Riesgos);
                                 for (int k = 0; k < ListaRiesgos.length(); k++){
@@ -162,11 +166,11 @@ public class ListaAreasActivity extends AppCompatActivity {
                         return String.valueOf(cursor.getInt(0));
                     }
                     catch (Exception e){
+
                         values.put(Utilidades.IdCliente, IdEncuesta);
                         values.put(Utilidades.NombreCliente, Titulo);
+                        long r = insert.insert(Tabla, Utilidades.IdCliente, values);
 
-                        insert.insert(Tabla, Utilidades.IdCliente, values);
-                        insert.close();
                         InsertarRegistro(Tabla, Parametros);
                     }
                 } catch (JSONException e) {
@@ -188,12 +192,13 @@ public class ListaAreasActivity extends AppCompatActivity {
                         return String.valueOf(cursor.getInt(0));
                     }
                     catch (Exception e){
+
                         values.put(Utilidades.IdClienteArea, IdArea);
                         values.put(Utilidades.FKIdCliente, IdCliente);
                         values.put(Utilidades.NombreClienteArea, Nombre);
                         values.put(Utilidades.Area, Area);
                         insert.insert(Tabla, Utilidades.IdSitioInteresRiesgo, values);
-                        insert.close();
+
                         InsertarRegistro(Tabla, Parametros);
                     }
                 } catch (JSONException e) {
@@ -215,6 +220,7 @@ public class ListaAreasActivity extends AppCompatActivity {
                         return String.valueOf(cursor.getString(0));
                     }
                     catch (Exception e){
+
                         values.put(Utilidades.IdClienteAreasRiesgo, IdRiesgo);
                         values.put(Utilidades.FKIdClienteArea, IdArea);
                         values.put(Utilidades.NombreClienteRiesgo, Nombre);
@@ -222,7 +228,8 @@ public class ListaAreasActivity extends AppCompatActivity {
                         values.put(Utilidades.ClienteImpacto, 0);
                         values.put(Utilidades.ClienteRespondido, "Pendiente");
                         insert.insert(Tabla, Utilidades.IdClienteAreasRiesgo, values);
-                        insert.close();
+
+
                         InsertarRegistro(Tabla, Parametros);
                     }
                 } catch (JSONException e) {

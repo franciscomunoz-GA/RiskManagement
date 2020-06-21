@@ -174,78 +174,89 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
 
     }
-    private void ValidarSesion(String User, String Pass){
-        final JSONObject Parametros = new JSONObject();
-        try {
-            Parametros.put("Correo", User);
-            Parametros.put("Password", Pass);
-            Parametros.put("Imei", IMEI);
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        final String savedata = Parametros.toString();
-        String URL = "http://cuenta-cuentas.com/backend/public/api/Sesion/UsuarioAplicacion";
-        requestQueue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject obj = new JSONObject(response);
-                    String Mensaje = obj.getString("Message");
-                    if(Mensaje.equals("Consulta Exitosa")){
-                        String Data = obj.getString("Data");
-                        //for (int i = 0; i < Data.length(); i++){
-                        //JSONObject Fila = Data.getJSONObject(i);
-                        switch (Data){
-                            case "Usuario incorrecto":
-                                snackbar.make(layout, "Usuario y/o contraseña incorrecto(s)", Snackbar.LENGTH_LONG).show();
-                                break;
-                            case "Contraseña incorrecta":
-                                snackbar.make(layout, "Usuario y/o contraseña incorrecto(s)", Snackbar.LENGTH_LONG).show();
-                                break;
-                            case "IMEI incorrecto":
-                                snackbar.make(layout, "IMEI incorrecto", Snackbar.LENGTH_LONG).show();
-                                break;
-                            default:
-                                JSONObject Informacion = new JSONObject(Data);
-                                String Id        = Informacion.getString("Id");
-                                String Nombre    = Informacion.getString("Nombre");
-                                String Telefono  = Informacion.getString("Telefono");
-                                Toast.makeText(getApplicationContext(), "Bienvenido "+Nombre, Toast.LENGTH_SHORT).show();
-                                snackbar.make(layout, "Bienvenido "+Nombre, Snackbar.LENGTH_LONG).show();
-                                Intent intent = new Intent(LoginActivity.this, ListaCitasActivity.class);
-                                intent.putExtra("IdUsuario", Id);
-                                startActivity(intent);
-                                finish();
-                                break;
+    private void ValidarSesion(String User, String Pass) {
+        int permiso = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (permiso == PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                IMEI = manager.getImei().toString();
+            }
+            final JSONObject Parametros = new JSONObject();
+            try {
+                Parametros.put("Correo", User);
+                Parametros.put("Password", Pass);
+                Parametros.put("Imei", IMEI);
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            final String savedata = Parametros.toString();
+            String URL = "http://cuenta-cuentas.com/backend/public/api/Sesion/UsuarioAplicacion";
+            requestQueue = Volley.newRequestQueue(getApplicationContext());
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj = new JSONObject(response);
+                        String Mensaje = obj.getString("Message");
+                        if (Mensaje.equals("Consulta Exitosa")) {
+                            String Data = obj.getString("Data");
+                            //for (int i = 0; i < Data.length(); i++){
+                            //JSONObject Fila = Data.getJSONObject(i);
+                            switch (Data) {
+                                case "Usuario incorrecto":
+                                    snackbar.make(layout, "Usuario y/o contraseña incorrecto(s)", Snackbar.LENGTH_LONG).show();
+                                    break;
+                                case "Contraseña incorrecta":
+                                    snackbar.make(layout, "Usuario y/o contraseña incorrecto(s)", Snackbar.LENGTH_LONG).show();
+                                    break;
+                                case "IMEI incorrecto":
+                                    snackbar.make(layout, "IMEI incorrecto", Snackbar.LENGTH_LONG).show();
+                                    break;
+                                default:
+                                    JSONObject Informacion = new JSONObject(Data);
+                                    String Id = Informacion.getString("Id");
+                                    String Nombre = Informacion.getString("Nombre");
+                                    String Telefono = Informacion.getString("Telefono");
+                                    Toast.makeText(getApplicationContext(), "Bienvenido " + Nombre, Toast.LENGTH_SHORT).show();
+                                    snackbar.make(layout, "Bienvenido " + Nombre, Snackbar.LENGTH_LONG).show();
+                                    Intent intent = new Intent(LoginActivity.this, ListaCitasActivity.class);
+                                    intent.putExtra("IdUsuario", Id);
+                                    startActivity(intent);
+                                    finish();
+                                    break;
+                            }
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                        onStop();
                     }
                 }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-                    onStop();
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            public String getBodyContentType(){ return "application/json; charset=utf-8";}
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return savedata == null ? null: savedata.getBytes("utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    return null;
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
                 }
-            }
-        };
-        requestQueue.add(stringRequest);
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return savedata == null ? null : savedata.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+            };
+            requestQueue.add(stringRequest);
+        }
+        else{
+            Toast.makeText(this, "No tienes permiso para tomar el IMEI", Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -1,3 +1,6 @@
+# 2020-06-20 (v 1.9.1)
+    Se corrige error al intentar insertar por primera vez los riesgos
+    Se quita la validación de minimo 8 carácteres del login
 # 2020-06-20 (v 1.9.0)
     Se manda responde cada Riesgo por area mediante la API
     Una vez confirmada por la API se guarda en SQLite
