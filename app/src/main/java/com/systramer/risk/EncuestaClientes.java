@@ -91,8 +91,8 @@ public class EncuestaClientes extends AppCompatActivity {
                 Utilidades.ClienteRespondido
         };
 
-        Cursor cursor = select.query(Utilidades.TablaClienteAreasRiesgos,campos, Utilidades.FKIdClienteArea+"=?", parameters, null, null, null);
-
+        //Cursor cursor = select.query(Utilidades.TablaClienteAreasRiesgos,campos, Utilidades.FKIdClienteArea+"=?", parameters, null, null, null);
+        Cursor cursor = select.rawQuery("SELECT Id, IdCliente, Nombre, Impacto, Probabilidad, Respondido FROM ClienteAreasRiesgos WHERE IdCliente = " + IdCliente + " AND IdClienteArea = " + IdArea, null);
         list = new ArrayList<>();
         if(cursor.moveToFirst()){
             do {

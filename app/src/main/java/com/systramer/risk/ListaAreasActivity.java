@@ -113,6 +113,7 @@ public class ListaAreasActivity extends AppCompatActivity {
                                 for (int k = 0; k < ListaRiesgos.length(); k++){
                                     JSONObject Riesgo = ListaRiesgos.getJSONObject(k);
                                     Riesgo.put("IdArea", Integer.parseInt(IdArea));
+                                    Riesgo.put("IdCliente", Integer.parseInt(IdCliente));
                                     InsertarRegistro(Utilidades.TablaClienteAreasRiesgos, Riesgo);
                                 }
                             }
@@ -160,7 +161,8 @@ public class ListaAreasActivity extends AppCompatActivity {
                     String[] parameters = { String.valueOf(IdEncuesta) };
                     String[] campos = { Utilidades.IdCliente };
 
-                    Cursor cursor = select.query(Tabla,campos, Utilidades.IdCliente+"=?", parameters, null, null, null);
+                    //Cursor cursor = select.query(Tabla,campos, Utilidades.IdCliente+"=?", parameters, null, null, null);
+                    Cursor cursor = select.rawQuery("SELECT * FROM Clientes WHERE Id = " + IdEncuesta, null);
                     cursor.moveToFirst();
                     try {
                         return String.valueOf(cursor.getInt(0));
@@ -186,7 +188,8 @@ public class ListaAreasActivity extends AppCompatActivity {
                     String[] parameters = { String.valueOf(IdArea) };
                     String[] campos = { Utilidades.IdClienteArea};
 
-                    Cursor cursor = select.query(Tabla,campos, Utilidades.IdClienteArea+"=?", parameters, null, null, null);
+                    //Cursor cursor = select.query(Tabla,campos, Utilidades.IdClienteArea+"=?", parameters, null, null, null);
+                    Cursor cursor = select.rawQuery("SELECT * FROM ClienteAreas WHERE Id = " + IdArea + " AND IdCliente = " + IdCliente, null);
                     cursor.moveToFirst();
                     try {
                         return String.valueOf(cursor.getInt(0));
@@ -208,13 +211,19 @@ public class ListaAreasActivity extends AppCompatActivity {
             case Utilidades.TablaClienteAreasRiesgos:
                 try {
                     int IdRiesgo    = Parametros.getInt("IdNombreARiesgo");
+                    int IdCliente = Parametros.getInt("IdCliente");
                     int IdArea = Parametros.getInt("IdArea");
+
                     String Nombre = Parametros.getString("Riesgo");
 
                     String[] parameters = { String.valueOf(IdRiesgo) };
                     String[] campos = { Utilidades.IdClienteAreasRiesgo};
 
-                    Cursor cursor = select.query(Tabla,campos, Utilidades.IdClienteAreasRiesgo+"=?", parameters, null, null, null);
+                    //Cursor cursor = select.query(Tabla,campos, Utilidades.IdClienteAreasRiesgo+"=?", parameters, null, null, null);
+                    Cursor cursor = select.rawQuery("SELECT * FROM ClienteAreasRiesgos" +
+                                                         " WHERE Id = " + IdRiesgo +
+                                                         " AND IdCliente = " + IdCliente +
+                                                         " AND IdClienteArea = " + IdArea, null);
                     cursor.moveToFirst();
                     try {
                         return String.valueOf(cursor.getString(0));
@@ -222,15 +231,14 @@ public class ListaAreasActivity extends AppCompatActivity {
                     catch (Exception e){
 
                         values.put(Utilidades.IdClienteAreasRiesgo, IdRiesgo);
-                        values.put(Utilidades.FKIdClienteArea, IdArea);
+                        values.put(Utilidades.FKIdClienteArea, IdCliente);
+                        values.put(Utilidades.FKIdClienteArea2, IdArea);
                         values.put(Utilidades.NombreClienteRiesgo, Nombre);
                         values.put(Utilidades.ClienteProbabilidad, 0);
                         values.put(Utilidades.ClienteImpacto, 0);
                         values.put(Utilidades.ClienteRespondido, "Pendiente");
                         insert.insert(Tabla, Utilidades.IdClienteAreasRiesgo, values);
-
-
-                        InsertarRegistro(Tabla, Parametros);
+                        return "";
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

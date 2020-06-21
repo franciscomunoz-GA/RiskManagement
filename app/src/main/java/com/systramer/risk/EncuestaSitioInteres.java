@@ -165,7 +165,8 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                     String[] parameters = { String.valueOf(IdEncuesta) };
                     String[] campos = { Utilidades.IdSitioInteres };
 
-                    Cursor cursor = select.query(Utilidades.TablaSitioInteres,campos, Utilidades.IdSitioInteres+"=?", parameters, null, null, null);
+                    // Cursor cursor = select.query(Utilidades.TablaSitioInteres,campos, Utilidades.IdSitioInteres+"=?", parameters, null, null, null);
+                    Cursor cursor = select.rawQuery("SELECT * FROM SitioInteres WHERE Id = " + IdEncuesta, null);
                     cursor.moveToFirst();
                     try {
                         return cursor.getString(0);
@@ -193,7 +194,8 @@ public class EncuestaSitioInteres extends AppCompatActivity {
                     String[] parameters = { String.valueOf(IdRiesgo) };
                     String[] campos = { Utilidades.IdSitioInteresRiesgo };
 
-                    Cursor cursor = select.query(Utilidades.TablaSitioInteresRiesgos,campos, Utilidades.IdSitioInteresRiesgo+"=?", parameters, null, null, null);
+                    //Cursor cursor = select.query(Utilidades.TablaSitioInteresRiesgos,campos, Utilidades.IdSitioInteresRiesgo+"=?", parameters, null, null, null);
+                    Cursor cursor = select.rawQuery("SELECT * FROM SitioInteresRiesgos WHERE Id = " + IdRiesgo +" AND IdSitioInteres = " + IdSitioInteres, null);
                     cursor.moveToFirst();
                     try {
                         return "encontrado "+cursor.getString(0);

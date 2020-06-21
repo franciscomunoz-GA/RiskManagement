@@ -15,12 +15,13 @@ public class Utilidades {
 
     public static final String TablaClienteAreasRiesgos = "ClienteAreasRiesgos";
     public static final String IdClienteAreasRiesgo     = "Id";
-    public static final String FKIdClienteArea          = "IdClienteArea";
+    public static final String FKIdClienteArea          = "IdCliente";
+    public static final String FKIdClienteArea2         = "IdClienteArea";
     public static final String NombreClienteRiesgo      = "Nombre";
     public static final String ClienteImpacto           = "Impacto";
     public static final String ClienteProbabilidad      = "Probabilidad";
     public static final String ClienteRespondido        = "Respondido";
-    public static final String ClienteAreasRiesgos      = "CREATE TABLE "+TablaClienteAreasRiesgos+" ("+IdClienteAreasRiesgo+" INTEGER, "+FKIdClienteArea+" INTEGER, "+NombreClienteRiesgo+" TEXT, "+ClienteImpacto+" INTEGER, "+ClienteProbabilidad+" INTEGER, "+ClienteRespondido+" TEXT)";
+    public static final String ClienteAreasRiesgos      = "CREATE TABLE "+TablaClienteAreasRiesgos+" ("+IdClienteAreasRiesgo+" INTEGER, "+FKIdClienteArea+" INTEGER,  "+FKIdClienteArea2+" INTEGER, "+NombreClienteRiesgo+" TEXT, "+ClienteImpacto+" INTEGER, "+ClienteProbabilidad+" INTEGER, "+ClienteRespondido+" TEXT)";
 
     public static final String TablaSitioInteres   = "SitioInteres";
     public static final String IdSitioInteres      = "Id";
