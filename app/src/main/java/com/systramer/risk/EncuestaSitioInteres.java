@@ -389,7 +389,7 @@ public class EncuestaSitioInteres extends AppCompatActivity {
         //int Resultado = update.update(Utilidades.TablaSitioInteresRiesgos, values, Utilidades.IdSitioInteresRiesgo+"=?", new String[]{String.valueOf(idRiesgo)});
 
         //update.close();
-        update.execSQL("UPDATE SitioInteresRiesgos SET Impacto = "+impacto+", Probabilidad = "+probabilidad+" WHERE Id = "+idRiesgo + " AND IdSitioInteres = " + IdSitioInteres);
+        update.execSQL("UPDATE SitioInteresRiesgos SET Impacto = "+impacto+", Probabilidad = "+probabilidad+", Respondido = 'Concretado' WHERE Id = "+idRiesgo + " AND IdSitioInteres = " + IdSitioInteres);
         return 1;
     }
     private void  MandarResultados(JSONArray Riesgos){

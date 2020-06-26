@@ -3,6 +3,7 @@ package com.systramer.risk.ui.login;
 import android.Manifest;
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -38,6 +40,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskExecutors;
+
+
+
+
+
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.systramer.risk.ListaCitasActivity;
 import com.systramer.risk.R;
 import com.systramer.risk.ui.login.LoginViewModel;
@@ -49,27 +66,32 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
+    public String mVerificationId;
+    public PhoneAuthProvider.ForceResendingToken mResendToken;
+    private FirebaseAuth mAuth;
     private RequestQueue requestQueue;
     private LoginViewModel loginViewModel;
-
+    public String Id;
     public TelephonyManager manager;
     public String IMEI;
-
+    public ProgressBar loadingProgressBar;
     ConstraintLayout layout;
     private Snackbar snackbar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mAuth = FirebaseAuth.getInstance();
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        loadingProgressBar = findViewById(R.id.loading);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -175,6 +197,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void ValidarSesion(String User, String Pass) {
+        loadingProgressBar.setVisibility(View.VISIBLE);
         int permiso = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permiso == PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -214,19 +237,24 @@ public class LoginActivity extends AppCompatActivity {
                                     break;
                                 default:
                                     JSONObject Informacion = new JSONObject(Data);
-                                    String Id = Informacion.getString("Id");
+                                    Id = Informacion.getString("Id");
                                     String Nombre = Informacion.getString("Nombre");
                                     String Telefono = Informacion.getString("Telefono");
+                                    //Toast.makeText(LoginActivity.this, Telefono, Toast.LENGTH_LONG).show();
+                                    /*
                                     Toast.makeText(getApplicationContext(), "Bienvenido " + Nombre, Toast.LENGTH_SHORT).show();
                                     snackbar.make(layout, "Bienvenido " + Nombre, Snackbar.LENGTH_LONG).show();
                                     Intent intent = new Intent(LoginActivity.this, ListaCitasActivity.class);
                                     intent.putExtra("IdUsuario", Id);
                                     startActivity(intent);
                                     finish();
+                                    */
+                                    sendVerificationCodeToUser("+52"+Telefono);
                                     break;
                             }
                         }
-                    } catch (JSONException e) {
+                    }
+                    catch (JSONException e) {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
                         onStop();
@@ -259,4 +287,95 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "No tienes permiso para tomar el IMEI", Toast.LENGTH_LONG).show();
         }
     }
+    private void verifyCode(String code){
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+        signInWithCredential(credential);
+    }
+
+    private void signInWithCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                loadingProgressBar.setVisibility(View.INVISIBLE);
+                if(task.isSuccessful()){
+                    Toast.makeText(getApplicationContext(), "Bienvenido ", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(LoginActivity.this, ListaCitasActivity.class);
+                    intent.putExtra("IdUsuario", Id);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void sendVerificationCodeToUser(String Telefono){
+        //Toast.makeText(LoginActivity.this,Telefono,Toast.LENGTH_LONG).show();
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                Telefono,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                LoginActivity.this,               // Activity (for callback binding)
+                mCallbacks);        // OnVerificationStateChangedCallbacks
+
+    }
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+    {
+
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential credential) {
+            String code = credential.getSmsCode();
+            if(code != null){
+                verifyCode(code);
+            }
+            /*
+            // This callback will be invoked in two situations:
+            // 1 - Instant verification. In some cases the phone number can be instantly
+            //     verified without needing to send or enter a verification code.
+            // 2 - Auto-retrieval. On some devices Google Play services can automatically
+            //     detect the incoming verification SMS and perform verification without
+            //     user action.
+            Log.d(String.valueOf(LoginActivity.this), "onVerificationCompleted:" + credential);
+
+            signInWithPhoneAuthCredential(credential);
+
+             */
+        }
+
+        private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        }
+
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            /*
+            Log.w(String.valueOf(LoginActivity.this), "onVerificationFailed", e);
+
+            if (e instanceof FirebaseAuthInvalidCredentialsException) {
+
+            } else if (e instanceof FirebaseTooManyRequestsException) {
+
+            }
+            */
+
+        }
+
+        @Override
+        public void onCodeSent(@NonNull String verificationId,
+                               @NonNull PhoneAuthProvider.ForceResendingToken token) {
+            // The SMS verification code has been sent to the provided phone number, we
+            // now need to ask the user to enter the code and then construct a credential
+            // by combining the code with a verification ID.
+            Log.d(String.valueOf(LoginActivity.this), "onCodeSent:" + verificationId);
+
+            // Save verification ID and resending token so we can use them later
+            mVerificationId = verificationId;
+            mResendToken = token;
+
+            // ...
+        }
+    };
 }

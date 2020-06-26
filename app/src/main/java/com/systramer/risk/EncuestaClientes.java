@@ -259,7 +259,7 @@ public class EncuestaClientes extends AppCompatActivity {
         values.put(Utilidades.ClienteImpacto, impacto);
         values.put(Utilidades.ClienteProbabilidad, probabilidad);
         values.put(Utilidades.ClienteRespondido, "Concretado");
-        update.execSQL("UPDATE ClienteAreasRiesgos SET Impacto = "+impacto+", Probabilidad = "+probabilidad+" WHERE Id = "+idRiesgo + " AND IdCliente = " + IdCliente + " AND IdClienteArea = " +idArea);
+        update.execSQL("UPDATE ClienteAreasRiesgos SET Impacto = "+impacto+", Probabilidad = "+probabilidad+", Respondido = 'Concretado'  WHERE Id = "+idRiesgo + " AND IdCliente = " + IdCliente + " AND IdClienteArea = " +idArea);
         //int Resultado = update.update(Utilidades.TablaClienteAreasRiesgos, values, Utilidades.IdClienteAreasRiesgo+"=?", new String[]{String.valueOf(idRiesgo)});
 
         return 1;

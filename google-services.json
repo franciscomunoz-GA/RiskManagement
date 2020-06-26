@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "628860354385",
+    "firebase_url": "https://riskmanagement-b12c0.firebaseio.com",
+    "project_id": "riskmanagement-b12c0",
+    "storage_bucket": "riskmanagement-b12c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628860354385:android:0f6c00d3166bbdf63f9d70",
+        "android_client_info": {
+          "package_name": "com.systramer.risk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628860354385-o5q6j7bgqutjj17k6ub4849l99rjitrk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.systramer.risk",
+            "certificate_hash": "79eaa59966bb9de087a7e461abd663ecf745380f"
+          }
+        },
+        {
+          "client_id": "628860354385-pu56doqobc27v77tgc1fv63k9dtk7fc4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB696bRpHyp0-JBxv_XK6-M5Pmmc4lkHwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628860354385-pu56doqobc27v77tgc1fv63k9dtk7fc4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

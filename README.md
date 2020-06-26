@@ -1,3 +1,7 @@
+# 2020-06-26 (v 1.10.0)
+    Se corrigen algunas querys
+    Se agrega la autentificación con SMS firebase
+    Se cambia el icono de la app
 # 2020-06-21 (v 1.9.5)
     Se corrige al modificar la información en SQLite, porque se modificaban en todos los riesgos similares
 # 2020-06-21 (v 1.9.4)
